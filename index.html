@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
 
+  <!-- =====================
+       EDITABLE VARIABLES
+  ====================== -->
+  <style>
+    :root {
+      /* Colors */
+      --bg-color: #0d0d0d;
+      --card-color: #151515;
+      --accent: #7c5cff;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+
+      /* Profile Info */
+      --username: "YourName";
+      --bio: "This is your short bio. Edit this text.";
+      --avatar-url: "https://via.placeholder.com/150";
+
+      /* Links */
+      /* Add or edit links here */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(270deg, #0d0d0d, #111, #0d0d0d);
+      background-size: 600% 600%;
+      animation: gradientShift 15s ease infinite;
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Particle Canvas */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    /* Main Card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card-color);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      background: url(var(--avatar-url)) center/cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    /* Username */
+    .username::before {
+      content: var(--username);
+    }
+
+    .username {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    /* Bio */
+    .bio::before {
+      content: var(--bio);
+    }
+
+    .bio {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    /* Links */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .link {
+      text-decoration: none;
+      color: var(--text-primary);
+      background: #1d1d1d;
+      padding: 12px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .link:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(124,92,255,0.4);
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="card">
+  <div class="avatar"></div>
+  <div class="username"></div>
+  <div class="bio"></div>
+
+  <div class="links">
+    <!-- EDIT LINKS BELOW -->
+    <a href="https://github.com/" class="link" target="_blank">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+
+    <a href="#" class="link">
+      <i class="fab fa-discord"></i> Discord
+    </a>
+
+    <a href="#" class="link">
+      <i class="fas fa-link"></i> Custom Link
+    </a>
+  </div>
+</div>
+
+<script>
+  // =====================
+  // PARTICLE BACKGROUND
+  // =====================
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2;
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+
+    draw() {
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initParticles();
+  });
+
+  initParticles();
+  animate();
+</script>
+
+</body>
+</html>
