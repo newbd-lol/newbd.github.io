@@ -5,25 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
 
-  <!-- =====================
-       EDITABLE VARIABLES
-  ====================== -->
   <style>
     :root {
-      /* Colors */
       --bg-color: #0d0d0d;
       --card-color: #151515;
       --accent: #7c5cff;
       --text-primary: #ffffff;
       --text-secondary: #a0a0a0;
 
-      /* Profile Info */
       --username: "Newbd_lol";
       --bio: "Starting python student.";
       --avatar-url: "https://i.imgur.com/yiAJF6d.jpeg";
-
-      /* Links */
-      /* Add or edit links here */
     }
 
     * {
@@ -51,7 +43,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Particle Canvas */
     canvas {
       position: fixed;
       top: 0;
@@ -59,7 +50,6 @@
       z-index: 0;
     }
 
-    /* Main Card */
     .card {
       position: relative;
       z-index: 1;
@@ -72,7 +62,6 @@
       box-shadow: 0 0 40px rgba(0,0,0,0.6);
     }
 
-    /* Avatar */
     .avatar {
       width: 110px;
       height: 110px;
@@ -83,20 +72,10 @@
       box-shadow: 0 0 15px var(--accent);
     }
 
-    /* Username */
-    .username::before {
-      content: var(--username);
-    }
-
     .username {
       font-size: 1.8rem;
       font-weight: bold;
       margin-bottom: 5px;
-    }
-
-    /* Bio */
-    .bio::before {
-      content: var(--bio);
     }
 
     .bio {
@@ -105,7 +84,6 @@
       margin-bottom: 20px;
     }
 
-    /* Links */
     .links {
       display: flex;
       flex-direction: column;
@@ -132,7 +110,6 @@
       box-shadow: 0 0 10px rgba(124,92,255,0.4);
     }
 
-    /* Mobile */
     @media (max-width: 480px) {
       .card {
         padding: 20px;
@@ -140,20 +117,20 @@
     }
   </style>
 
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
 <canvas id="bg"></canvas>
 
 <div class="card">
   <div class="avatar"></div>
+
   <div class="username"></div>
   <div class="bio"></div>
 
   <div class="links">
-    <!-- EDIT LINKS BELOW -->
     <a href="https://github.com/newbd-lol" class="link" target="_blank">
       <i class="fab fa-github"></i> GitHub
     </a>
@@ -169,9 +146,16 @@
 </div>
 
 <script>
-  // =====================
-  // PARTICLE BACKGROUND
-  // =====================
+  // Fill text from CSS variables (stable method)
+  const root = getComputedStyle(document.documentElement);
+
+  document.querySelector(".username").textContent =
+    root.getPropertyValue("--username").replace(/"/g, "").trim();
+
+  document.querySelector(".bio").textContent =
+    root.getPropertyValue("--bio").replace(/"/g, "").trim();
+
+  // Particle background
   const canvas = document.getElementById('bg');
   const ctx = canvas.getContext('2d');
 
